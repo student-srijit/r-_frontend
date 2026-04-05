@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Research Plus</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        width: 400px;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background: #f5f5f5;
+        color: #333;
+      }
+
+      .container {
+        padding: 16px;
+      }
+
+      .header {
+        margin-bottom: 16px;
+      }
+
+      .header h1 {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+
+      .header p {
+        font-size: 12px;
+        color: #666;
+      }
+
+      .auth-status {
+        background: white;
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 16px;
+        border: 1px solid #e0e0e0;
+      }
+
+      .auth-status.authenticated {
+        background: #f0f9ff;
+        border-color: #0284c7;
+      }
+
+      .auth-status.authenticated .status-text {
+        color: #0284c7;
+      }
+
+      .status-text {
+        font-size: 12px;
+        color: #d32f2f;
+        font-weight: 500;
+      }
+
+      .section {
+        background: white;
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 12px;
+        border: 1px solid #e0e0e0;
+      }
+
+      .section-title {
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #666;
+        text-transform: uppercase;
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 12px;
+        margin-bottom: 8px;
+        font-family: inherit;
+      }
+
+      input:focus,
+      select:focus,
+      textarea:focus {
+        outline: none;
+        border-color: #0284c7;
+        box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.1);
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 60px;
+      }
+
+      button {
+        width: 100%;
+        padding: 8px;
+        border: none;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .btn-primary {
+        background: #0284c7;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: #0369a1;
+      }
+
+      .btn-primary:disabled {
+        background: #cbd5e1;
+        cursor: not-allowed;
+      }
+
+      .btn-secondary {
+        background: #e5e7eb;
+        color: #333;
+      }
+
+      .btn-secondary:hover {
+        background: #d1d5db;
+      }
+
+      .link-input {
+        display: flex;
+        gap: 4px;
+      }
+
+      .link-input input {
+        flex: 1;
+        margin-bottom: 0;
+      }
+
+      .link-input button {
+        width: auto;
+        min-width: 60px;
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 8px;
+      }
+
+      .action-buttons button {
+        flex: 1;
+      }
+
+      .message {
+        padding: 8px 12px;
+        border-radius: 4px;
+        font-size: 12px;
+        margin-bottom: 8px;
+      }
+
+      .message.success {
+        background: #dcfce7;
+        color: #166534;
+        border: 1px solid #bbf7d0;
+      }
+
+      .message.error {
+        background: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+      }
+
+      .message.info {
+        background: #dbeafe;
+        color: #0c4a6e;
+        border: 1px solid #bfdbfe;
+      }
+
+      .loading {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border: 2px solid #f3f4f6;
+        border-top: 2px solid #0284c7;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .research-list {
+        max-height: 200px;
+        overflow-y: auto;
+      }
+
+      .research-item {
+        padding: 8px;
+        background: #f9fafb;
+        border-radius: 4px;
+        margin-bottom: 6px;
+        font-size: 11px;
+        cursor: pointer;
+        border: 1px solid #e5e7eb;
+      }
+
+      .research-item:hover {
+        background: #f3f4f6;
+      }
+
+      .research-item-title {
+        font-weight: 500;
+        margin-bottom: 2px;
+      }
+
+      .research-item-meta {
+        color: #666;
+        font-size: 10px;
+      }
+
+      .result-block {
+        font-size: 11px;
+        color: #374151;
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        padding: 8px;
+        margin-bottom: 8px;
+        max-height: 170px;
+        overflow: auto;
+      }
+
+      .result-block h4 {
+        font-size: 11px;
+        margin-bottom: 6px;
+      }
+
+      .result-block ul {
+        padding-left: 14px;
+      }
+
+      .sync-status {
+        font-size: 10px;
+        color: #666;
+        margin-top: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Research Plus</h1>
+        <p>Analyze research links in seconds</p>
+      </div>
+
+      <div class="auth-status" id="authStatus">
+        <div class="status-text">Not logged in</div>
+      </div>
+
+      <div id="authView">
+        <div class="section">
+          <div class="section-title">Login</div>
+          <input
+            type="email"
+            id="loginEmail"
+            placeholder="Email"
+            style="margin-bottom: 8px"
+          />
+          <input
+            type="password"
+            id="loginPassword"
+            placeholder="Password"
+            style="margin-bottom: 8px"
+          />
+          <button class="btn-primary" id="loginBtn">Sign In</button>
+          <p
+            style="
+              font-size: 11px;
+              color: #666;
+              margin-top: 8px;
+              text-align: center;
+            "
+          >
+            Need an account?
+            <a
+              id="signUpLink"
+              href="#"
+              target="_blank"
+              style="color: #0284c7; text-decoration: none"
+            >
+              Sign Up
+            </a>
+          </p>
+        </div>
+      </div>
+
+      <div id="appView" class="hidden">
+        <div id="messageContainer"></div>
+
+        <div class="section">
+          <div class="section-title">Website Connection</div>
+          <button class="btn-secondary" id="syncFromWebsiteBtn">
+            Use Saved Session From Website
+          </button>
+          <div class="sync-status" id="syncStatus">Not synced</div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Current Link</div>
+          <input
+            type="url"
+            id="linkUrl"
+            placeholder="URL to analyze"
+            readonly
+          />
+        </div>
+
+        <div class="section">
+          <div class="section-title">Select Research Work</div>
+          <div class="research-list" id="researchList">
+            <div style="padding: 8px; color: #666; font-size: 11px">
+              Loading research works...
+            </div>
+          </div>
+          <button
+            class="btn-secondary"
+            id="newResearchBtn"
+            style="font-size: 11px; padding: 6px"
+          >
+            + Create New
+          </button>
+        </div>
+
+        <div class="section">
+          <div class="section-title">API Configuration</div>
+          <select id="provider" style="margin-bottom: 8px">
+            <option value="openai">OpenAI</option>
+            <option value="anthropic">Anthropic (Claude)</option>
+            <option value="gemini">Google Gemini</option>
+            <option value="groq" selected>Groq</option>
+            <option value="together">Together AI</option>
+            <option value="deepinfra">DeepInfra</option>
+            <option value="openrouter">OpenRouter</option>
+            <option value="mistral">Mistral</option>
+            <option value="perplexity">Perplexity</option>
+            <option value="custom">Custom (OpenAI-compat)</option>
+          </select>
+          <input
+            type="text"
+            id="modelName"
+            placeholder="Model (e.g. llama-3.1-8b-instant)"
+            style="margin-bottom: 8px"
+          />
+          <input
+            type="password"
+            id="apiKey"
+            placeholder="Your API Key"
+            style="margin-bottom: 8px"
+          />
+          <small
+            style="
+              display: block;
+              color: #666;
+              font-size: 10px;
+              margin-bottom: 8px;
+            "
+          >
+            Your API key is never stored. It's only used for this request.
+          </small>
+        </div>
+
+        <div class="section">
+          <div class="section-title">
+            <span>⚙ Settings</span>
+            <button
+              id="toggleSettingsBtn"
+              style="
+                background: none;
+                border: none;
+                cursor: pointer;
+                float: right;
+                font-size: 11px;
+                color: #0284c7;
+                padding: 0;
+                width: auto;
+              "
+            >
+              Show
+            </button>
+          </div>
+          <div id="settingsPanel" style="display: none; margin-top: 8px">
+            <label
+              style="
+                font-size: 11px;
+                color: #555;
+                display: block;
+                margin-bottom: 2px;
+              "
+              >Backend API URL</label
+            >
+            <input
+              type="url"
+              id="settingsApiUrl"
+              placeholder="http://localhost:5000/api"
+              style="margin-bottom: 8px"
+            />
+            <label
+              style="
+                font-size: 11px;
+                color: #555;
+                display: block;
+                margin-bottom: 2px;
+              "
+              >Frontend URL</label
+            >
+            <input
+              type="url"
+              id="settingsFrontendUrl"
+              placeholder="http://localhost:3000"
+              style="margin-bottom: 8px"
+            />
+            <button
+              class="btn-primary"
+              id="saveSettingsBtn"
+              style="font-size: 11px; padding: 6px"
+            >
+              Save Settings
+            </button>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="action-buttons">
+            <button class="btn-primary" id="analyzeBtn">Analyze</button>
+            <button class="btn-secondary" id="logoutBtn">Logout</button>
+          </div>
+        </div>
+
+        <div class="section hidden" id="analysisResultSection">
+          <div class="section-title">Latest Analysis</div>
+          <div id="analysisResultContent"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

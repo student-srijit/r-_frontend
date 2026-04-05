@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "Research Plus",
+  "version": "1.0.1",
+  "description": "Analyze research links and manage your research work directly from your browser",
+  "minimum_chrome_version": "114",
+  "permissions": ["activeTab", "scripting", "contextMenus", "storage"],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "src/background.js"
+  },
+  "action": {
+    "default_popup": "src/popup.html",
+    "default_title": "Research Plus",
+    "default_icon": {
+      "16": "images/icon16.png",
+      "48": "images/icon48.png"
+    }
+  },
+  "icons": {
+    "16": "images/icon16.png",
+    "48": "images/icon48.png",
+    "128": "images/icon128.png"
+  }
+}
