@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { useAppSettingsStore } from "@/lib/store";
 
 interface AnalysisResultProps {
   url: string;
@@ -33,6 +34,9 @@ export function AnalysisResult({
   onDelete,
 }: AnalysisResultProps) {
   const [copied, setCopied] = useState(false);
+  const autoOpenEvidenceSections = useAppSettingsStore(
+    (state) => state.settings.autoOpenEvidenceSections,
+  );
 
   const confidenceWeights: Record<"high" | "medium" | "low", number> = {
     high: 1,
@@ -202,7 +206,10 @@ export function AnalysisResult({
 
         {evidence.length > 0 && (
           <div>
-            <details open className="rounded-lg border p-3 bg-muted/40">
+            <details
+              open={autoOpenEvidenceSections}
+              className="rounded-lg border p-3 bg-muted/40"
+            >
               <summary className="cursor-pointer text-sm font-semibold">
                 Evidence-Locked Citations ({evidence.length})
               </summary>

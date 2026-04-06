@@ -66,6 +66,20 @@ interface LLMSessionCredentials {
   baseUrl: string;
 }
 
+export interface AppSettings {
+  defaultEvidenceMode: boolean;
+  defaultAnalysisProvider: string;
+  defaultAnalysisModel: string;
+  defaultAnalysisBaseUrl: string;
+  autoOpenEvidenceSections: boolean;
+}
+
+interface AppSettingsState {
+  settings: AppSettings;
+  setSettings: (incoming: Partial<AppSettings>) => void;
+  resetSettings: () => void;
+}
+
 interface LLMSessionState {
   credentials: LLMSessionCredentials;
   setCredentials: (credentials: Partial<LLMSessionCredentials>) => void;
@@ -78,6 +92,14 @@ const defaultLLMSessionCredentials: LLMSessionCredentials = {
   model: "llama-3.3-70b-versatile",
   apiKey: "",
   baseUrl: "",
+};
+
+const defaultAppSettings: AppSettings = {
+  defaultEvidenceMode: true,
+  defaultAnalysisProvider: "groq",
+  defaultAnalysisModel: "llama-3.3-70b-versatile",
+  defaultAnalysisBaseUrl: "",
+  autoOpenEvidenceSections: true,
 };
 
 export const useLLMSessionStore = create<LLMSessionState>()(
@@ -147,6 +169,26 @@ export const useLLMSessionStore = create<LLMSessionState>()(
           // Ignore malformed legacy storage payload.
         }
       },
+    },
+  ),
+);
+
+export const useAppSettingsStore = create<AppSettingsState>()(
+  persist(
+    (set) => ({
+      settings: defaultAppSettings,
+      setSettings: (incoming) =>
+        set((state) => ({
+          settings: {
+            ...state.settings,
+            ...incoming,
+          },
+        })),
+      resetSettings: () => set({ settings: defaultAppSettings }),
+    }),
+    {
+      name: "app-settings",
+      storage: createJSONStorage(() => localStorage),
     },
   ),
 );

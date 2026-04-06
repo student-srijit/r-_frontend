@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { analyzeLink } from "@/lib/research";
+import { useAppSettingsStore } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -97,13 +98,33 @@ export function AnalysisForm({
   sharedCredentials,
 }: AnalysisFormProps) {
   const { toast } = useToast();
+  const settings = useAppSettingsStore((state) => state.settings);
   const [isLoading, setIsLoading] = useState(false);
   const [url, setUrl] = useState("");
   const [apiKey, setApiKey] = useState("");
-  const [provider, setProvider] = useState("groq");
-  const [model, setModel] = useState("llama-3.3-70b-versatile");
-  const [baseUrl, setBaseUrl] = useState("");
-  const [evidenceMode, setEvidenceMode] = useState(true);
+  const [provider, setProvider] = useState(settings.defaultAnalysisProvider);
+  const [model, setModel] = useState(settings.defaultAnalysisModel);
+  const [baseUrl, setBaseUrl] = useState(settings.defaultAnalysisBaseUrl);
+  const [evidenceMode, setEvidenceMode] = useState(
+    settings.defaultEvidenceMode,
+  );
+
+  useEffect(() => {
+    if (sharedCredentials) {
+      return;
+    }
+
+    setProvider(settings.defaultAnalysisProvider);
+    setModel(settings.defaultAnalysisModel);
+    setBaseUrl(settings.defaultAnalysisBaseUrl);
+    setEvidenceMode(settings.defaultEvidenceMode);
+  }, [
+    sharedCredentials,
+    settings.defaultAnalysisProvider,
+    settings.defaultAnalysisModel,
+    settings.defaultAnalysisBaseUrl,
+    settings.defaultEvidenceMode,
+  ]);
 
   const selectedProvider =
     PROVIDERS.find((p) => p.value === provider) || PROVIDERS[3];
