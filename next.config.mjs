@@ -1,10 +1,31 @@
 /** @type {import('next').NextConfig} */
-const backendApiOrigin = process.env.BACKEND_API_ORIGIN;
+const rawBackendApiOrigin = process.env.BACKEND_API_ORIGIN;
 
-if (!backendApiOrigin) {
+if (!rawBackendApiOrigin) {
   throw new Error(
     "Missing BACKEND_API_ORIGIN. Set it in your environment to proxy /api requests.",
   );
+}
+
+let backendOrigin;
+try {
+  backendOrigin = new URL(rawBackendApiOrigin).origin;
+} catch {
+  throw new Error(
+    "Invalid BACKEND_API_ORIGIN. Use a full URL such as https://r-backend-eight.vercel.app",
+  );
+}
+
+const currentVercelHost = process.env.VERCEL_URL;
+if (currentVercelHost) {
+  const currentHost = currentVercelHost.replace(/^https?:\/\//, "").replace(/\/$/, "");
+  const backendHost = new URL(backendOrigin).host;
+
+  if (backendHost === currentHost) {
+    throw new Error(
+      "BACKEND_API_ORIGIN points to this frontend host, which causes redirect loops. Set it to your backend deployment URL.",
+    );
+  }
 }
 
 const nextConfig = {
@@ -18,7 +39,7 @@ const nextConfig = {
     return [
       {
         source: "/api/:path*",
-        destination: `${backendApiOrigin}/api/:path*`,
+        destination: `${backendOrigin}/api/:path*`,
       },
     ];
   },
