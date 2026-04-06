@@ -5,6 +5,7 @@ import { analyzeLink } from "@/lib/research";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import {
   Select,
@@ -102,6 +103,7 @@ export function AnalysisForm({
   const [provider, setProvider] = useState("groq");
   const [model, setModel] = useState("llama-3.3-70b-versatile");
   const [baseUrl, setBaseUrl] = useState("");
+  const [evidenceMode, setEvidenceMode] = useState(true);
 
   const selectedProvider =
     PROVIDERS.find((p) => p.value === provider) || PROVIDERS[3];
@@ -152,6 +154,7 @@ export function AnalysisForm({
         effectiveApiKey,
         effectiveProvider,
         effectiveModel,
+        evidenceMode,
         effectiveProvider === "custom" ? effectiveBaseUrl : undefined,
       );
 
@@ -196,7 +199,8 @@ export function AnalysisForm({
         <AlertCircle className="h-4 w-4 text-orange-600" />
         <AlertDescription className="text-orange-800">
           Your API key is stored locally on your device for reuse and is never
-          stored in our database.
+          stored in our database. Enable Evidence-Locked mode to force
+          source-backed quotes for each analysis.
         </AlertDescription>
       </Alert>
 
@@ -213,6 +217,21 @@ export function AnalysisForm({
             onChange={(e) => setUrl(e.target.value)}
             disabled={isLoading}
             required
+          />
+        </div>
+
+        <div className="flex items-center justify-between rounded-lg border p-3 bg-muted/40">
+          <div>
+            <p className="text-sm font-medium">Evidence-Locked Mode</p>
+            <p className="text-xs text-muted-foreground">
+              Requires verifiable source quotes linked to each key claim.
+            </p>
+          </div>
+          <Switch
+            checked={evidenceMode}
+            onCheckedChange={setEvidenceMode}
+            disabled={isLoading}
+            aria-label="Toggle evidence lock mode"
           />
         </div>
 

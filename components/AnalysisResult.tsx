@@ -12,6 +12,12 @@ interface AnalysisResultProps {
   analysis: {
     summary: string;
     keyPoints: string[];
+    evidence?: Array<{
+      claim: string;
+      quote: string;
+      sourceUrl?: string;
+      confidence?: "high" | "medium" | "low";
+    }>;
     importantConcepts?: string[];
     practicalApplications?: string[];
     discussionQuestions?: string[];
@@ -39,6 +45,7 @@ export function AnalysisResult({
     .filter(Boolean);
 
   const keyPoints = analysis.keyPoints || [];
+  const evidence = analysis.evidence || [];
   const importantConcepts = analysis.importantConcepts || [];
   const practicalApplications = analysis.practicalApplications || [];
   const discussionQuestions = analysis.discussionQuestions || [];
@@ -111,6 +118,43 @@ export function AnalysisResult({
                   </li>
                 ))}
               </ul>
+            </details>
+          </div>
+        )}
+
+        {evidence.length > 0 && (
+          <div>
+            <details open className="rounded-lg border p-3 bg-muted/40">
+              <summary className="cursor-pointer text-sm font-semibold">
+                Evidence-Locked Citations ({evidence.length})
+              </summary>
+              <div className="space-y-3 mt-3">
+                {evidence.map((item, idx) => (
+                  <div key={idx} className="rounded-md border bg-background/70 p-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <p className="text-sm font-medium">{item.claim}</p>
+                      {item.confidence && (
+                        <Badge variant="outline" className="text-xs">
+                          {item.confidence}
+                        </Badge>
+                      )}
+                    </div>
+                    <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+                      "{item.quote}"
+                    </p>
+                    {item.sourceUrl && (
+                      <a
+                        href={item.sourceUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-2 inline-block text-xs text-primary hover:underline"
+                      >
+                        View source
+                      </a>
+                    )}
+                  </div>
+                ))}
+              </div>
             </details>
           </div>
         )}

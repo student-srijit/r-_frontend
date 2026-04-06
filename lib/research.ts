@@ -8,6 +8,12 @@ export interface Link {
   analysis?: {
     summary: string;
     keyPoints: string[];
+    evidence?: Array<{
+      claim: string;
+      quote: string;
+      sourceUrl?: string;
+      confidence?: "high" | "medium" | "low";
+    }>;
     importantConcepts?: string[];
     practicalApplications?: string[];
     discussionQuestions?: string[];
@@ -92,6 +98,7 @@ export async function analyzeLink(
   apiKey: string,
   provider: string,
   model: string,
+  evidenceMode?: boolean,
   baseUrl?: string,
 ): Promise<ApiResponse<any>> {
   return apiClient.post<any>("/analyze/link", {
@@ -100,6 +107,7 @@ export async function analyzeLink(
     apiKey,
     provider,
     model,
+    evidenceMode: Boolean(evidenceMode),
     ...(baseUrl && { baseUrl }),
   });
 }
