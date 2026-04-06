@@ -152,3 +152,171 @@
 .reveal-up {
   animation: reveal-up-keyframe 700ms ease-out both;
 }
+
+@layer components {
+  .auth-signup-shell {
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 18% 18%, rgba(8, 145, 178, 0.2), transparent 45%),
+      radial-gradient(circle at 88% 20%, rgba(37, 99, 235, 0.2), transparent 40%),
+      linear-gradient(140deg, oklch(0.98 0.01 236), oklch(0.95 0.02 230));
+    padding: 1.25rem;
+  }
+
+  .auth-signup-grid {
+    position: relative;
+    z-index: 2;
+    margin: 0 auto;
+    display: grid;
+    min-height: calc(100vh - 2.5rem);
+    width: 100%;
+    max-width: 72rem;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .auth-signup-intro {
+    max-width: 32rem;
+    color: oklch(0.27 0.04 248);
+  }
+
+  .auth-signup-title {
+    margin-top: 0.75rem;
+    font-size: clamp(2rem, 2.4vw + 1.2rem, 3.3rem);
+    line-height: 1.08;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  .auth-signup-copy {
+    margin-top: 1rem;
+    max-width: 29rem;
+    line-height: 1.6;
+    color: oklch(0.42 0.03 250);
+  }
+
+  .auth-signup-list {
+    margin-top: 1.5rem;
+    display: grid;
+    gap: 0.7rem;
+    font-size: 0.96rem;
+    color: oklch(0.38 0.03 248);
+  }
+
+  .auth-signup-list li {
+    border-left: 2px solid rgba(8, 145, 178, 0.35);
+    padding-left: 0.75rem;
+  }
+
+  .auth-signup-chip {
+    display: inline-flex;
+    width: fit-content;
+    border-radius: 9999px;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    background: rgba(255, 255, 255, 0.72);
+    padding: 0.35rem 0.65rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: oklch(0.3 0.03 250);
+    backdrop-filter: blur(8px);
+  }
+
+  .auth-signup-chip-inline {
+    margin-bottom: 0.5rem;
+  }
+
+  .auth-signup-card {
+    width: 100%;
+    max-width: 33rem;
+    border-color: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.82);
+    box-shadow:
+      0 24px 50px rgba(15, 23, 42, 0.14),
+      0 1px 0 rgba(255, 255, 255, 0.7) inset;
+    backdrop-filter: blur(16px);
+  }
+
+  .auth-signup-card input:focus-visible {
+    border-color: rgba(14, 116, 144, 0.55);
+    box-shadow: 0 0 0 4px rgba(14, 116, 144, 0.14);
+  }
+
+  .auth-signup-button {
+    border: 0;
+    background: linear-gradient(110deg, rgb(14 116 144), rgb(29 78 216));
+    color: white;
+    box-shadow: 0 10px 24px rgba(14, 116, 144, 0.28);
+    transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+  }
+
+  .auth-signup-button:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.04);
+    box-shadow: 0 14px 28px rgba(14, 116, 144, 0.32);
+  }
+
+  .auth-signup-button:active {
+    transform: translateY(0);
+  }
+
+  .auth-signup-orb {
+    pointer-events: none;
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(56px);
+    opacity: 0.52;
+    animation: auth-orb-float 14s ease-in-out infinite;
+  }
+
+  .auth-signup-orb-one {
+    top: -6rem;
+    left: -5rem;
+    height: 14rem;
+    width: 14rem;
+    background: rgba(6, 182, 212, 0.45);
+  }
+
+  .auth-signup-orb-two {
+    right: -4rem;
+    bottom: -5rem;
+    height: 16rem;
+    width: 16rem;
+    background: rgba(30, 64, 175, 0.38);
+    animation-delay: -4s;
+  }
+
+  @media (min-width: 1024px) {
+    .auth-signup-grid {
+      grid-template-columns: 1fr minmax(24rem, 33rem);
+      gap: 2.5rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .auth-signup-shell {
+      padding: 0.75rem;
+    }
+
+    .auth-signup-grid {
+      min-height: calc(100vh - 1.5rem);
+    }
+
+    .auth-signup-card {
+      max-width: 100%;
+    }
+  }
+}
+
+@keyframes auth-orb-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, -12px, 0) scale(1.04);
+  }
+}

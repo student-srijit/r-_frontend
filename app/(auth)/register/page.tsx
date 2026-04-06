@@ -9,6 +9,7 @@ import { useAuthStore } from '@/lib/store';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 
 export default function RegisterPage() {
@@ -60,97 +61,109 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md">
-        <div className="p-8">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2">Research Plus</h1>
-            <p className="text-muted-foreground">
-              Create an account to get started
-            </p>
-          </div>
+    <div className="auth-signup-shell">
+      <div className="auth-signup-orb auth-signup-orb-one" />
+      <div className="auth-signup-orb auth-signup-orb-two" />
+      <div className="auth-signup-grid">
+        <section className="auth-signup-intro reveal-up hidden lg:block">
+          <p className="auth-signup-chip">Research Plus Workspace</p>
+          <h1 className="auth-signup-title">Build sharper research habits from day one.</h1>
+          <p className="auth-signup-copy">
+            Create your account to organize papers, extract insights quickly, and prepare interview-ready talking points in one focused workflow.
+          </p>
+          <ul className="auth-signup-list">
+            <li>Structured research notes and analysis in one place</li>
+            <li>Trending discovery feed tailored to your interests</li>
+            <li>Interview simulation flow based on your saved work</li>
+          </ul>
+        </section>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="firstName" className="block text-sm font-medium mb-2">
-                  First Name
-                </label>
-                <Input
-                  id="firstName"
-                  type="text"
-                  placeholder="John"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  disabled={isLoading}
-                />
-              </div>
-              <div>
-                <label htmlFor="lastName" className="block text-sm font-medium mb-2">
-                  Last Name
-                </label>
-                <Input
-                  id="lastName"
-                  type="text"
-                  placeholder="Doe"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  disabled={isLoading}
-                />
-              </div>
-            </div>
-
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium mb-2">
-                Email
-              </label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                disabled={isLoading}
-              />
-            </div>
-
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium mb-2">
-                Password
-              </label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                minLength={6}
-                disabled={isLoading}
-              />
-              <p className="text-xs text-muted-foreground mt-1">
-                Minimum 6 characters
+        <Card className="auth-signup-card reveal-up">
+          <div className="p-6 sm:p-8">
+            <div className="mb-8 space-y-2">
+              <p className="auth-signup-chip auth-signup-chip-inline">Get Started</p>
+              <h2 className="text-3xl font-bold tracking-tight">Create your account</h2>
+              <p className="text-muted-foreground">
+                Join Research Plus and start building your technical edge.
               </p>
             </div>
 
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={isLoading}
-            >
-              {isLoading ? 'Creating account...' : 'Sign Up'}
-            </Button>
-          </form>
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="firstName">First Name</Label>
+                  <Input
+                    id="firstName"
+                    type="text"
+                    placeholder="First name"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    disabled={isLoading}
+                    className="h-11 bg-background/80"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="lastName">Last Name</Label>
+                  <Input
+                    id="lastName"
+                    type="text"
+                    placeholder="Last name"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    disabled={isLoading}
+                    className="h-11 bg-background/80"
+                  />
+                </div>
+              </div>
 
-          <p className="text-center text-sm text-muted-foreground mt-6">
-            Already have an account?{' '}
-            <Link href="/login" className="text-primary hover:underline">
-              Sign in
-            </Link>
-          </p>
-        </div>
-      </Card>
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  disabled={isLoading}
+                  className="h-11 bg-background/80"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  minLength={6}
+                  disabled={isLoading}
+                  className="h-11 bg-background/80"
+                />
+                <p className="text-xs text-muted-foreground">Minimum 6 characters</p>
+              </div>
+
+              <Button
+                type="submit"
+                className="auth-signup-button h-11 w-full"
+                disabled={isLoading}
+              >
+                {isLoading ? 'Creating account...' : 'Sign Up'}
+              </Button>
+            </form>
+
+            <p className="text-center text-sm text-muted-foreground mt-6">
+              Already have an account?{' '}
+              <Link href="/login" className="font-medium text-primary hover:underline">
+                Sign in
+              </Link>
+            </p>
+          </div>
+        </Card>
+      </div>
     </div>
   );
 }
