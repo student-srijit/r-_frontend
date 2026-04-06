@@ -19,7 +19,7 @@
   --accent: oklch(0.92 0.06 206);
   --accent-foreground: oklch(0.24 0.04 232);
   --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.99 0.01 20);
   --border: oklch(0.9 0.02 246);
   --input: oklch(0.9 0.02 246);
   --ring: oklch(0.68 0.18 236);
@@ -55,7 +55,7 @@
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
+  --destructive-foreground: oklch(0.98 0.01 20);
   --border: oklch(0.269 0 0);
   --input: oklch(0.269 0 0);
   --ring: oklch(0.439 0 0);
@@ -488,6 +488,65 @@
     animation: auth-image-pan 19s ease-in-out infinite;
   }
 
+  .research-detail-shell {
+    background:
+      radial-gradient(circle at 10% 12%, rgba(6, 182, 212, 0.1), transparent 32%),
+      radial-gradient(circle at 90% 10%, rgba(37, 99, 235, 0.09), transparent 34%),
+      linear-gradient(180deg, oklch(0.985 0.01 248), oklch(0.97 0.012 242));
+  }
+
+  .research-detail-container {
+    position: relative;
+  }
+
+  .research-detail-back {
+    border-color: rgba(14, 116, 144, 0.28);
+    background: rgba(255, 255, 255, 0.62);
+    backdrop-filter: blur(10px);
+  }
+
+  .research-detail-hero {
+    display: grid;
+    gap: 1rem;
+    align-items: stretch;
+  }
+
+  .research-detail-head-card {
+    border-color: rgba(255, 255, 255, 0.84);
+    background: rgba(255, 255, 255, 0.82);
+    box-shadow:
+      0 20px 42px rgba(15, 23, 42, 0.1),
+      0 1px 0 rgba(255, 255, 255, 0.85) inset;
+    backdrop-filter: blur(12px);
+  }
+
+  .research-detail-hero-image {
+    border-radius: calc(var(--radius) + 8px);
+    border: 1px solid rgba(255, 255, 255, 0.76);
+    background:
+      linear-gradient(160deg, rgba(15, 23, 42, 0.18), rgba(30, 64, 175, 0.1)),
+      url("https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=1400&q=80") center/cover no-repeat;
+    min-height: 13.5rem;
+    box-shadow: 0 16px 34px rgba(15, 23, 42, 0.12);
+    animation: auth-image-pan 16s ease-in-out infinite;
+  }
+
+  .research-detail-card {
+    border-color: rgba(255, 255, 255, 0.82);
+    background: rgba(255, 255, 255, 0.84);
+    box-shadow:
+      0 18px 40px rgba(15, 23, 42, 0.1),
+      0 1px 0 rgba(255, 255, 255, 0.82) inset;
+    backdrop-filter: blur(13px);
+  }
+
+  .research-detail-card input:focus-visible,
+  .research-detail-card textarea:focus-visible,
+  .research-detail-card button[data-slot="select-trigger"]:focus-visible {
+    border-color: rgba(37, 99, 235, 0.5);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+  }
+
   @media (min-width: 1024px) {
     .auth-signup-grid {
       grid-template-columns: 1fr minmax(24rem, 33rem);
@@ -508,6 +567,10 @@
     .research-gateway-grid {
       grid-template-columns: minmax(0, 1fr) minmax(18rem, 22rem);
       gap: 1.2rem;
+    }
+
+    .research-detail-hero {
+      grid-template-columns: minmax(0, 1fr) minmax(16rem, 23rem);
     }
   }
 

@@ -490,31 +490,36 @@ export default function ResearchDetailPage() {
   const canOpenInterview = hasLLMCredentials && analyzedLinks.length > 0;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="research-detail-shell min-h-screen bg-background">
       <Navbar />
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+      <div className="research-detail-container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
         <Button
           variant="outline"
           size="sm"
+          className="research-detail-back"
           onClick={() => router.push("/dashboard")}
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Dashboard
         </Button>
 
-        <Card className="p-6">
-          <h1 className="text-3xl font-bold mb-3">{research.title}</h1>
-          <div className="flex flex-wrap gap-2 mb-4">
-            <Badge variant="secondary">{research.field}</Badge>
-            <Badge variant="outline">{research.difficulty}</Badge>
-          </div>
-          {research.description && (
-            <p className="text-muted-foreground">{research.description}</p>
-          )}
-        </Card>
+        <section className="research-detail-hero reveal-up">
+          <Card className="research-detail-head-card p-6">
+            <p className="auth-signup-chip auth-signup-chip-inline">Research Workspace</p>
+            <h1 className="text-3xl font-bold mb-3 leading-tight">{research.title}</h1>
+            <div className="flex flex-wrap gap-2 mb-4">
+              <Badge variant="secondary">{research.field}</Badge>
+              <Badge variant="outline">{research.difficulty}</Badge>
+            </div>
+            {research.description && (
+              <p className="text-muted-foreground leading-7">{research.description}</p>
+            )}
+          </Card>
+          <div className="research-detail-hero-image hidden xl:block" />
+        </section>
 
-        <Card className="p-6 space-y-4">
+        <Card className="research-detail-card p-6 space-y-4">
           <div className="flex items-center gap-2">
             <KeyRound className="w-5 h-5" />
             <h3 className="text-lg font-semibold">
@@ -534,7 +539,7 @@ export default function ResearchDetailPage() {
                 value={sessionProvider}
                 onValueChange={handleLLMProviderChange}
               >
-                <SelectTrigger>
+                <SelectTrigger className="bg-background/80">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -563,6 +568,7 @@ export default function ResearchDetailPage() {
                     (provider) => provider.value === sessionProvider,
                   )?.placeholder
                 }
+                className="bg-background/80"
               />
             </div>
           </div>
@@ -581,6 +587,7 @@ export default function ResearchDetailPage() {
                 value={sessionBaseUrl}
                 onChange={(e) => setSessionBaseUrl(e.target.value)}
                 placeholder="https://your-endpoint.com/v1"
+                className="bg-background/80"
               />
             </div>
           )}
@@ -598,6 +605,7 @@ export default function ResearchDetailPage() {
               value={sessionApiKey}
               onChange={(e) => setSessionApiKey(e.target.value)}
               placeholder="Your API key"
+              className="bg-background/80"
             />
           </div>
 
@@ -620,7 +628,7 @@ export default function ResearchDetailPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
-            <Card className="p-6">
+            <Card className="research-detail-card p-6">
               <h3 className="text-lg font-semibold mb-4">
                 Step 2: Add Research Link
               </h3>
@@ -631,10 +639,10 @@ export default function ResearchDetailPage() {
                   value={newLinkUrl}
                   onChange={(e) => setNewLinkUrl(e.target.value)}
                   disabled={isUpdating}
-                  className="flex-1"
+                  className="flex-1 bg-background/80"
                 />
                 <Select value={newLinkType} onValueChange={setNewLinkType}>
-                  <SelectTrigger className="w-35">
+                  <SelectTrigger className="w-35 bg-background/80">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -678,7 +686,7 @@ export default function ResearchDetailPage() {
               />
             ))}
 
-            <Card className="p-6 space-y-4">
+            <Card className="research-detail-card p-6 space-y-4">
               <h3 className="text-lg font-semibold flex items-center gap-2">
                 <Volume2 className="w-5 h-5" />
                 Voice Summary
@@ -769,7 +777,7 @@ export default function ResearchDetailPage() {
           </div>
 
           <div className="space-y-4">
-            <Card className="p-6">
+            <Card className="research-detail-card p-6">
               <h3 className="font-semibold mb-4">Quick Stats</h3>
               <p className="text-sm text-muted-foreground">Total links</p>
               <p className="text-2xl font-bold mb-4">{research.links.length}</p>
@@ -777,7 +785,7 @@ export default function ResearchDetailPage() {
               <p className="text-2xl font-bold">{analyzedLinks.length}</p>
             </Card>
 
-            <Card className="p-4 space-y-3">
+            <Card className="research-detail-card p-4 space-y-3">
               <p className="text-sm font-medium">
                 Step 3: Interview Generation
               </p>
