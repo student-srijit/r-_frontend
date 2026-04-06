@@ -9,6 +9,7 @@ import { useAuthStore } from '@/lib/store';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 
 export default function LoginPage() {
@@ -58,64 +59,81 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md">
-        <div className="p-8">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2">Research Plus</h1>
-            <p className="text-muted-foreground">
-              Sign in to your account to continue
+    <div className="auth-gateway-shell">
+      <div className="auth-gateway-orb auth-gateway-orb-one" />
+      <div className="auth-gateway-orb auth-gateway-orb-two" />
+      <div className="auth-gateway-grid">
+        <section className="auth-gateway-visual reveal-up hidden lg:flex">
+          <div>
+            <p className="auth-signup-chip">Research Gateway</p>
+            <h1 className="auth-gateway-title">Step back into your research command center.</h1>
+            <p className="auth-gateway-copy">
+              Track papers, synthesize findings, and keep your interview prep in one workflow designed for deep technical learning.
+            </p>
+            <ul className="auth-gateway-points">
+              <li>AI-assisted paper breakdowns</li>
+              <li>Curated discovery feed with relevance scoring</li>
+              <li>Interview simulation from your own research notes</li>
+            </ul>
+          </div>
+          <div className="auth-gateway-image" />
+        </section>
+
+        <Card className="auth-gateway-card reveal-up">
+          <div className="p-6 sm:p-8">
+            <div className="mb-8 space-y-2">
+              <p className="auth-signup-chip auth-signup-chip-inline">Welcome Back</p>
+              <h2 className="text-3xl font-bold tracking-tight">Sign in to Research Plus</h2>
+              <p className="text-muted-foreground">Continue from where your last research session ended.</p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  disabled={isLoading}
+                  className="h-11 bg-background/85"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  disabled={isLoading}
+                  className="h-11 bg-background/85"
+                />
+              </div>
+
+              <Button
+                type="submit"
+                className="auth-signup-button h-11 w-full"
+                disabled={isLoading}
+              >
+                {isLoading ? 'Signing in...' : 'Sign In'}
+              </Button>
+            </form>
+
+            <p className="text-center text-sm text-muted-foreground mt-6">
+              Don&apos;t have an account?{' '}
+              <Link href="/register" className="font-medium text-primary hover:underline">
+                Sign up
+              </Link>
             </p>
           </div>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium mb-2">
-                Email
-              </label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                disabled={isLoading}
-              />
-            </div>
-
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium mb-2">
-                Password
-              </label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                disabled={isLoading}
-              />
-            </div>
-
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={isLoading}
-            >
-              {isLoading ? 'Signing in...' : 'Sign In'}
-            </Button>
-          </form>
-
-          <p className="text-center text-sm text-muted-foreground mt-6">
-            Don&apos;t have an account?{' '}
-            <Link href="/register" className="text-primary hover:underline">
-              Sign up
-            </Link>
-          </p>
-        </div>
-      </Card>
+        </Card>
+      </div>
     </div>
   );
 }

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import {
   Select,
@@ -140,196 +141,210 @@ export default function NewResearchPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="research-gateway-shell min-h-screen">
       <Navbar />
 
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <Card className="p-8">
-          <h1 className="text-3xl font-bold mb-8">Create New Research Work</h1>
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-10">
+        <section className="research-gateway-hero reveal-up">
+          <div>
+            <p className="auth-signup-chip auth-signup-chip-inline">Research Gateway</p>
+            <h1 className="research-gateway-title">Design your next deep-dive research workspace.</h1>
+            <p className="research-gateway-copy">
+              Structure your topic, attach source links, and generate a focused base for analysis, discussions, and interview preparation.
+            </p>
+          </div>
+          <div className="research-gateway-hero-image" />
+        </section>
 
-          {formError && (
-            <div className="mb-4 rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-700">
-              {formError}
+        <div className="research-gateway-grid mt-6">
+          <Card className="research-gateway-form-card reveal-up">
+            <div className="p-6 sm:p-8">
+              {formError && (
+                <div className="mb-5 rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-700">
+                  {formError}
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="title">Title *</Label>
+                  <Input
+                    id="title"
+                    name="title"
+                    placeholder="e.g., Deep Learning in Computer Vision"
+                    value={formData.title}
+                    onChange={handleChange}
+                    minLength={5}
+                    required
+                    disabled={isLoading}
+                    className="h-11 bg-background/80"
+                  />
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Minimum 5 characters
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="description">Description</Label>
+                  <Textarea
+                    id="description"
+                    name="description"
+                    placeholder="Briefly describe this research..."
+                    value={formData.description}
+                    onChange={handleChange}
+                    rows={4}
+                    disabled={isLoading}
+                    className="bg-background/80"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="field">Field *</Label>
+                    <Select
+                      value={formData.field}
+                      onValueChange={(value) => handleSelectChange("field", value)}
+                    >
+                      <SelectTrigger className="h-11 bg-background/80">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {RESEARCH_FIELDS_LIST.map((field) => (
+                          <SelectItem key={field} value={field}>
+                            {field}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="difficulty">Difficulty</Label>
+                    <Select
+                      value={formData.difficulty}
+                      onValueChange={(value) =>
+                        handleSelectChange("difficulty", value)
+                      }
+                    >
+                      <SelectTrigger className="h-11 bg-background/80">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="beginner">Beginner</SelectItem>
+                        <SelectItem value="intermediate">Intermediate</SelectItem>
+                        <SelectItem value="advanced">Advanced</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="tags">Tags (comma-separated)</Label>
+                  <Input
+                    id="tags"
+                    name="tags"
+                    placeholder="e.g., neural-networks, python, tensorflow"
+                    value={formData.tags}
+                    onChange={handleChange}
+                    disabled={isLoading}
+                    className="h-11 bg-background/80"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="notes">Notes</Label>
+                  <Textarea
+                    id="notes"
+                    name="notes"
+                    placeholder="Add any personal notes..."
+                    value={formData.notes}
+                    onChange={handleChange}
+                    rows={3}
+                    disabled={isLoading}
+                    className="bg-background/80"
+                  />
+                </div>
+
+                <div className="space-y-3 rounded-xl border border-border/80 bg-background/70 p-4">
+                  <h2 className="text-sm font-semibold">Research Link (optional)</h2>
+                  <p className="text-xs text-muted-foreground">
+                    Paste your paper or article URL to attach it immediately after creating the workspace.
+                  </p>
+
+                  <Input
+                    id="initialUrl"
+                    name="initialUrl"
+                    type="url"
+                    placeholder="https://arxiv.org/abs/..."
+                    value={formData.initialUrl}
+                    onChange={handleChange}
+                    disabled={isLoading}
+                    className="h-11 bg-background/80"
+                  />
+
+                  <div className="space-y-2">
+                    <Label htmlFor="initialUrlType">Link Type</Label>
+                    <Select
+                      value={formData.initialUrlType}
+                      onValueChange={(value) =>
+                        handleSelectChange("initialUrlType", value)
+                      }
+                    >
+                      <SelectTrigger className="h-11 bg-background/80">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="paper">Paper</SelectItem>
+                        <SelectItem value="blog">Blog</SelectItem>
+                        <SelectItem value="vlog">Vlog</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <Button
+                    type="submit"
+                    disabled={isLoading}
+                    className="auth-signup-button h-11 flex-1"
+                  >
+                    {isLoading ? "Creating..." : "Create Research Work"}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => router.back()}
+                    disabled={isLoading}
+                    className="h-11"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </form>
             </div>
-          )}
+          </Card>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label htmlFor="title" className="block text-sm font-medium mb-2">
-                Title *
-              </label>
-              <Input
-                id="title"
-                name="title"
-                placeholder="e.g., Deep Learning in Computer Vision"
-                value={formData.title}
-                onChange={handleChange}
-                minLength={5}
-                required
-                disabled={isLoading}
-              />
-              <p className="mt-1 text-xs text-muted-foreground">
-                Minimum 5 characters
-              </p>
-            </div>
-
-            <div>
-              <label
-                htmlFor="description"
-                className="block text-sm font-medium mb-2"
-              >
-                Description
-              </label>
-              <Textarea
-                id="description"
-                name="description"
-                placeholder="Briefly describe this research..."
-                value={formData.description}
-                onChange={handleChange}
-                rows={4}
-                disabled={isLoading}
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label
-                  htmlFor="field"
-                  className="block text-sm font-medium mb-2"
-                >
-                  Field *
-                </label>
-                <Select
-                  value={formData.field}
-                  onValueChange={(value) => handleSelectChange("field", value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {RESEARCH_FIELDS_LIST.map((field) => (
-                      <SelectItem key={field} value={field}>
-                        {field}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+          <aside className="research-gateway-side reveal-up hidden xl:block">
+            <Card className="research-gateway-side-card p-5">
+              <h2 className="text-lg font-semibold">What makes a strong research brief?</h2>
+              <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+                <li>Define a narrow technical question in your title.</li>
+                <li>Capture context and why this topic matters now.</li>
+                <li>Attach at least one canonical source link to start analysis.</li>
+              </ul>
+            </Card>
+            <Card className="research-gateway-side-card mt-4 overflow-hidden p-0">
+              <div className="research-gateway-side-image" />
+              <div className="p-4">
+                <h3 className="text-sm font-semibold">From idea to interview-ready</h3>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  This workspace feeds your analysis pipeline, discovery ranking, and interview simulations.
+                </p>
               </div>
-
-              <div>
-                <label
-                  htmlFor="difficulty"
-                  className="block text-sm font-medium mb-2"
-                >
-                  Difficulty
-                </label>
-                <Select
-                  value={formData.difficulty}
-                  onValueChange={(value) =>
-                    handleSelectChange("difficulty", value)
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="beginner">Beginner</SelectItem>
-                    <SelectItem value="intermediate">Intermediate</SelectItem>
-                    <SelectItem value="advanced">Advanced</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div>
-              <label htmlFor="tags" className="block text-sm font-medium mb-2">
-                Tags (comma-separated)
-              </label>
-              <Input
-                id="tags"
-                name="tags"
-                placeholder="e.g., neural-networks, python, tensorflow"
-                value={formData.tags}
-                onChange={handleChange}
-                disabled={isLoading}
-              />
-            </div>
-
-            <div>
-              <label htmlFor="notes" className="block text-sm font-medium mb-2">
-                Notes
-              </label>
-              <Textarea
-                id="notes"
-                name="notes"
-                placeholder="Add any personal notes..."
-                value={formData.notes}
-                onChange={handleChange}
-                rows={3}
-                disabled={isLoading}
-              />
-            </div>
-
-            <div className="space-y-3 rounded-lg border p-4">
-              <h2 className="text-sm font-semibold">
-                Research Link (optional)
-              </h2>
-              <p className="text-xs text-muted-foreground">
-                Paste your paper/article URL here to add it immediately after
-                creating this research work.
-              </p>
-
-              <Input
-                id="initialUrl"
-                name="initialUrl"
-                type="url"
-                placeholder="https://arxiv.org/abs/..."
-                value={formData.initialUrl}
-                onChange={handleChange}
-                disabled={isLoading}
-              />
-
-              <div>
-                <label
-                  htmlFor="initialUrlType"
-                  className="block text-sm font-medium mb-2"
-                >
-                  Link Type
-                </label>
-                <Select
-                  value={formData.initialUrlType}
-                  onValueChange={(value) =>
-                    handleSelectChange("initialUrlType", value)
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="paper">Paper</SelectItem>
-                    <SelectItem value="blog">Blog</SelectItem>
-                    <SelectItem value="vlog">Vlog</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div className="flex gap-4">
-              <Button type="submit" disabled={isLoading} className="flex-1">
-                {isLoading ? "Creating..." : "Create Research Work"}
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => router.back()}
-                disabled={isLoading}
-              >
-                Cancel
-              </Button>
-            </div>
-          </form>
-        </Card>
+            </Card>
+          </aside>
+        </div>
       </div>
     </div>
   );
