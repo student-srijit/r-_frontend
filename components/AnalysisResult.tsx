@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Link as LinkIcon, Trash2 } from "lucide-react";
+import { FileDown, Link as LinkIcon, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 
 interface AnalysisResultProps {
   url: string;
@@ -33,10 +34,78 @@ export function AnalysisResult({
 }: AnalysisResultProps) {
   const [copied, setCopied] = useState(false);
 
+  const confidenceWeights: Record<"high" | "medium" | "low", number> = {
+    high: 1,
+    medium: 0.72,
+    low: 0.45,
+  };
+
   const handleCopySummary = async () => {
     await navigator.clipboard.writeText(analysis.summary || "");
     setCopied(true);
     setTimeout(() => setCopied(false), 1200);
+  };
+
+  const buildEvidenceReport = () => {
+    const sections: string[] = [];
+
+    sections.push(`# RSA Evidence Report`);
+    sections.push(``);
+    sections.push(`- Source URL: ${url}`);
+    sections.push(`- Content Type: ${type}`);
+    sections.push(`- Generated At: ${new Date().toISOString()}`);
+    sections.push(
+      `- Evidence Strength Score: ${evidenceStrengthScore !== null ? `${evidenceStrengthScore}/100` : "N/A"}`,
+    );
+    sections.push(``);
+    sections.push(`## Summary`);
+    sections.push(analysis.summary || "No summary available.");
+    sections.push(``);
+
+    if (keyPoints.length > 0) {
+      sections.push(`## Key Points`);
+      keyPoints.forEach((point) => sections.push(`- ${point}`));
+      sections.push(``);
+    }
+
+    if (evidence.length > 0) {
+      sections.push(`## Evidence-Locked Citations`);
+      evidence.forEach((item, index) => {
+        sections.push(`### Evidence ${index + 1}`);
+        sections.push(`- Claim: ${item.claim}`);
+        sections.push(`- Confidence: ${item.confidence || "medium"}`);
+        sections.push(`- Quote: "${item.quote}"`);
+        sections.push(`- Source: ${item.sourceUrl || url}`);
+        sections.push(``);
+      });
+    }
+
+    return sections.join("\n");
+  };
+
+  const handleExportReport = () => {
+    if (!evidence.length) return;
+
+    const markdown = buildEvidenceReport();
+    const blob = new Blob([markdown], {
+      type: "text/markdown;charset=utf-8",
+    });
+    const fileUrl = URL.createObjectURL(blob);
+
+    const anchor = document.createElement("a");
+    const sourceSlug = url
+      .replace(/^https?:\/\//, "")
+      .replace(/[^a-zA-Z0-9.-]+/g, "-")
+      .replace(/-+/g, "-")
+      .slice(0, 80)
+      .replace(/^-|-$/g, "");
+
+    anchor.href = fileUrl;
+    anchor.download = `rsa-evidence-report-${sourceSlug || "source"}.md`;
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    URL.revokeObjectURL(fileUrl);
   };
 
   const summaryParagraphs = analysis.summary
@@ -46,6 +115,15 @@ export function AnalysisResult({
 
   const keyPoints = analysis.keyPoints || [];
   const evidence = analysis.evidence || [];
+  const evidenceScoreRaw =
+    evidence.length > 0
+      ? evidence.reduce((sum, item) => {
+          const confidence = item.confidence || "medium";
+          return sum + confidenceWeights[confidence];
+        }, 0) / evidence.length
+      : null;
+  const evidenceStrengthScore =
+    evidenceScoreRaw !== null ? Math.round(evidenceScoreRaw * 100) : null;
   const importantConcepts = analysis.importantConcepts || [];
   const practicalApplications = analysis.practicalApplications || [];
   const discussionQuestions = analysis.discussionQuestions || [];
@@ -128,6 +206,35 @@ export function AnalysisResult({
               <summary className="cursor-pointer text-sm font-semibold">
                 Evidence-Locked Citations ({evidence.length})
               </summary>
+              <div className="mt-3 rounded-md border bg-background/70 p-3">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-sm font-medium">Evidence Strength</p>
+                    <p className="text-xs text-muted-foreground">
+                      Score based on citation confidence labels
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline">
+                      {evidenceStrengthScore !== null
+                        ? `${evidenceStrengthScore}/100`
+                        : "N/A"}
+                    </Badge>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleExportReport}
+                    >
+                      <FileDown className="w-4 h-4 mr-2" />
+                      Export Report
+                    </Button>
+                  </div>
+                </div>
+                <Progress
+                  className="mt-3"
+                  value={evidenceStrengthScore !== null ? evidenceStrengthScore : 0}
+                />
+              </div>
               <div className="space-y-3 mt-3">
                 {evidence.map((item, idx) => (
                   <div key={idx} className="rounded-md border bg-background/70 p-3">
